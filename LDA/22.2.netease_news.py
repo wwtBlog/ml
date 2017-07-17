@@ -23,7 +23,7 @@ if __name__ == '__main__':
     stop_words = load_stopword()
 
     print u'开始读入语料数据 -- '
-    f = open('seg_corpus.txt')    #LDA_test.txt
+    f = open('lda_corpus.txt')    #LDA_test.txt
     texts = [[word for word in line.strip().lower().split() if word not in stop_words] for line in f]
     # texts = [line.strip().split() for line in f]
     print u'读入语料数据完成，用时%.3f秒' % (time.time() - t_start)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
         topic_idx = topic_distribute.argsort()[:-num_show_topic-1:-1]
         print (u'第%d个文档的前%d个主题：' % (i, num_show_topic)), topic_idx
         print topic_distribute[topic_idx]
-    num_show_term = 7   # 每个主题显示几个词
+    num_show_term = 10   # 每个主题显示几个词
     print u'每个主题的词分布：'
     for topic_id in range(num_topics):
         print u'主题#%d：\t' % topic_id

@@ -9,7 +9,7 @@ from pprint import pprint
 
 
 if __name__ == '__main__':
-    f = open('LDA_test.txt')
+    f = open('lda_corpus.txt')
     stop_list = set('for a of the and to in'.split())
     # texts = [line.strip().split() for line in f]
     # print 'Before'
@@ -62,4 +62,4 @@ if __name__ == '__main__':
     print '\n\nUSE WITH CARE--\nHDA Model:'
     pprint(topic_result)
     print 'HDA Topics:'
-    print hda.print_topics(num_topics=2, num_words=5)
+    print hda.print_topics(num_topics=10, num_words=10)

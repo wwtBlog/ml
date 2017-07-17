@@ -57,7 +57,6 @@ def compute_chi():
                 else:
                     term_cat_num[term] = {}
                     term_cat_num[term][label] = 1
-    out = open('chi_num.txt','w')
     for word in terms:
         for label in labels:
             aplusb = sum(term_cat_num[word].values())
@@ -78,9 +77,6 @@ def compute_chi():
                         term_chi[word] = chi
             else:
                 term_chi[word] = chi
-            if float(chi) - 2544.94335907 < 1:
-                out.write(word.encode('utf8') + '\t' + str(a) +'\t' + str(b) + '\t' +str(c) +'\t' + str(d) +  '\t'+  str(chi))
-                out.write('\n')
 
     ana = open('chi_result.txt','w')
     res = sorted(term_chi.items(), key=lambda e:e[1], reverse=True)
