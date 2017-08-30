@@ -4,6 +4,8 @@ Logistic Regression Working Module
 @author: Peter
 '''
 from numpy import *
+import matplotlib.pyplot as plt
+import numpy as np
 
 def loadDataSet():
     dataMat = []; labelMat = []
@@ -17,17 +19,32 @@ def loadDataSet():
 def sigmoid(inX):
     return 1.0/(1+exp(-inX))
 
+def costFunction(theta, X, y):
+    m = X.shape[0]
+    h = sigmoid(X.dot(theta.transpose()))
+    J = (-1.0/m)*(np.log(h).T.dot(y) + np.log(1 - h).T.dot(1-y))
+    return J
+
 def gradAscent(dataMatIn, classLabels):
     dataMatrix = mat(dataMatIn)             #convert to NumPy matrix
     labelMat = mat(classLabels).transpose() #convert to NumPy matrix
     m,n = shape(dataMatrix)
     alpha = 0.001
-    maxCycles = 500
+    maxCycles = 300
     weights = ones((n,1))
+
+    iters = []
+    cost = []
     for k in range(maxCycles):              #heavy on matrix operations
         h = sigmoid(dataMatrix*weights)     #matrix mult
-        error = (labelMat - h)              #vector subtraction
-        weights = weights + alpha * dataMatrix.transpose()* error #matrix mult
+        error = (h - labelMat)              #vector subtraction
+        iters.append(k)
+        cost.append(costFunction(weights, dataMatrix, labelMat))
+        weights = weights - alpha *(1.0/m)* dataMatrix.transpose()* error #matrix mult
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.scatter(iters, cost)
+    plt.show()
     return weights
 
 def plotBestFit(weights):
@@ -52,14 +69,24 @@ def plotBestFit(weights):
     plt.xlabel('X1'); plt.ylabel('X2');
     plt.show()
 
-def stocGradAscent0(dataMatrix, classLabels):
+def stocGradAscent0(dataMatIn, classLabels):
+    dataMatrix = mat(dataMatIn)             #convert to NumPy matrix
+    labelMat = mat(classLabels).transpose() #convert to NumPy matrix
     m,n = shape(dataMatrix)
     alpha = 0.01
-    weights = ones(n)   #initialize to all ones
+    weights = ones((1,3))   #initialize to all ones
+    iters = []
+    cost = []
     for i in range(m):
-        h = sigmoid(sum(dataMatrix[i]*weights))
-        error = classLabels[i] - h
-        weights = weights + alpha * error * dataMatrix[i]
+        h = sigmoid(weights*dataMatrix[i].transpose())
+        error = h - classLabels[i]
+        iters.append(i)
+        cost.append(costFunction(weights, dataMatrix, labelMat))
+        weights = weights - (1.0/m)*alpha * error * dataMatrix[i]
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.scatter(iters, cost)
+    plt.show()
     return weights
 
 def stocGradAscent1(dataMatrix, classLabels, numIter=150):
@@ -112,5 +139,4 @@ def multiTest():
     print "after %d iterations the average error rate is: %f" % (numTests, errorSum/float(numTests))
 
 dataArr,labelMat = loadDataSet()
-weights = gradAscent(dataArr,labelMat)
-plotBestFit(weights.getA())
+weights = stocGradAscent0(dataArr,labelMat)
